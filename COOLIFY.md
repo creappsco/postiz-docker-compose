@@ -4,7 +4,7 @@ Usa `docker-compose.coolify.yaml` (no el `docker-compose.yaml` original, que se 
 
 ## Requisitos
 - VPS con Coolify v4, mínimo 2 vCPU / 2 GB RAM libres (recomendado 4 GB).
-- Un subdominio (ej. `postiz.tudominio.com`) con registro A apuntando al VPS.
+- El subdominio `mk.creapps.co` con registro A apuntando a la IP del VPS.
 
 ## 1. Crear el recurso
 1. Coolify → Project → **+ New Resource** → repositorio de GitHub (GitHub App o repo público) → `creappsco/postiz-docker-compose`, rama `main`.
@@ -16,16 +16,18 @@ Usa `docker-compose.coolify.yaml` (no el `docker-compose.yaml` original, que se 
 En el servicio **postiz**, campo *Domains*:
 
 ```
-https://postiz.tudominio.com:5000
+https://mk.creapps.co:5000
 ```
 
-El `:5000` le dice a Coolify a qué puerto interno enrutar; la URL pública queda sin puerto y con SSL automático. Los demás servicios van sin dominio.
+**El `:5000` no aparece en la URL pública.** Es solo la forma en que Coolify sabe a qué puerto *dentro del contenedor* mandar el tráfico. Los usuarios entran por `https://mk.creapps.co` (puerto 443, SSL automático) y Traefik lo reenvía internamente al 5000. El puerto 5000 no se abre en el VPS.
+
+Si escribes el dominio sin `:5000`, Coolify asume el puerto 80 dentro del contenedor y Postiz da *Bad Gateway*. Los demás servicios van sin dominio.
 
 ## 3. Variables de entorno (pestaña *Environment Variables*)
 
 | Variable | Obligatoria | Valor |
 |---|---|---|
-| `POSTIZ_URL` | sí | `https://postiz.tudominio.com` (sin `/` final, sin puerto) |
+| `POSTIZ_URL` | sí | `https://mk.creapps.co` (sin `/` final, sin puerto) |
 | `JWT_SECRET` | sí | `openssl rand -hex 32` |
 | `POSTIZ_DB_PASSWORD` | sí | `openssl rand -hex 24` |
 | `TEMPORAL_DB_PASSWORD` | sí | `openssl rand -hex 24` |
@@ -39,7 +41,7 @@ Usa contraseñas en hexadecimal: `POSTIZ_DB_PASSWORD` va dentro de una URL de co
 > Las contraseñas de las bases de datos se fijan en el **primer** arranque. Si las cambias después, Postgres seguirá usando la antigua (está guardada en el volumen).
 
 ## 4. Desplegar
-Pulsa **Deploy**. El primer arranque tarda 3–5 min (Elasticsearch y Temporal se inicializan; `postiz` espera a que Temporal esté sano). Luego abre `https://postiz.tudominio.com` y crea tu cuenta.
+Pulsa **Deploy**. El primer arranque tarda 3–5 min (Elasticsearch y Temporal se inicializan; `postiz` espera a que Temporal esté sano). Luego abre `https://mk.creapps.co` y crea tu cuenta.
 
 Después pon `DISABLE_REGISTRATION=true` y **Redeploy** (un simple restart no aplica variables nuevas).
 
@@ -47,7 +49,7 @@ Después pon `DISABLE_REGISTRATION=true` y **Redeploy** (un simple restart no ap
 Cada red necesita su app de desarrollador. URL de callback:
 
 ```
-https://postiz.tudominio.com/integrations/social/<red>
+https://mk.creapps.co/integrations/social/<red>
 ```
 
 (ej. `.../integrations/social/linkedin`). Tras añadir las claves, Redeploy.
