@@ -1,4 +1,6 @@
 
+> **Coolify:** usa `docker-compose.coolify.yaml` y sigue [COOLIFY.md](COOLIFY.md).
+
 ## Watch the Tutorial for docker-compose install:
 [https://m.youtube.com/watch?v=A6CjAmJOWvA&t=5s](https://m.youtube.com/watch?v=A6CjAmJOWvA&t=5s)
 
