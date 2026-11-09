@@ -61,7 +61,7 @@ Configura backups programados en Coolify o en el VPS para los volúmenes `postgr
 - **Login falla / pantalla en blanco:** revisa que `POSTIZ_URL` use `https` y no tenga `/` final.
 - **Los posts no se publican:** logs del servicio `temporal`.
 - **Elasticsearch se reinicia (exit 137):** falta RAM en el VPS.
-- **Temporal no arranca por `dynamicconfig`:** el recurso debe crearse desde Git (paso 1), no pegando el YAML a mano.
+- **Temporal `unhealthy` / `stat ...development-sql.yaml: no such file or directory`:** Coolify monta las carpetas del repo vacías, así que este compose ya no usa `./dynamicconfig`: el servicio `temporal` genera el archivo en `/tmp/dynamicconfig.yaml` al arrancar. Si cambias `dynamicconfig/development-sql.yaml`, replica el cambio en el `entrypoint` de `temporal`.
 
 ## Diferencias con el compose original
 - Sin `ports`: el tráfico entra por el proxy de Coolify.
